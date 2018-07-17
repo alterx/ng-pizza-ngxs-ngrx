@@ -1,44 +1,54 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, ActivatedRouteSnapshot } from "@angular/router";
-
-import { Store } from "@ngrx/store";
-
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  RouterStateSnapshot
+} from "@angular/router";
+import { Store } from "@ngxs/store";
 import { Observable, of } from "rxjs";
-import { tap, take, filter, switchMap, catchError, map } from "rxjs/operators";
-
-import * as fromStore from "../store";
-
+import { filter, map, switchMap, tap, take } from "rxjs/operators";
 import { Pizza } from "../models/pizza.model";
+import { LoadPizzas, SelectPizza } from "../store/actions/pizzas.action";
+import { PizzaState } from "../store/state/pizza.state";
 
 @Injectable()
 export class PizzaExistsGuard implements CanActivate {
-  constructor(private store: Store<fromStore.ProductsState>) {}
+  constructor(private store: Store) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
     return this.checkStore().pipe(
       switchMap(() => {
-        const id = route.params.pizzaId;
+        const id = +route.params.pizzaId;
         return this.hasPizza(id);
-      }),
-      catchError(() => of(false))
+      })
     );
   }
 
   hasPizza(id: number): Observable<boolean> {
-    return this.store.select(fromStore.getPizzasEntities).pipe(
-      map((entities: { [key: number]: Pizza }) => !!entities[id]),
-      take(1)
+    return this.store.selectOnce(PizzaState.getAllPizzasEntities).pipe(
+      map((entities: { [id: number]: Pizza }) => entities[id]),
+      switchMap(pizza => {
+        if (!!pizza) {
+          return this.store
+            .dispatch(new SelectPizza(pizza.id))
+            .pipe(switchMap(() => of(true)));
+        }
+        return of(false);
+      })
     );
   }
 
   checkStore(): Observable<boolean> {
-    return this.store.select(fromStore.getPizzasLoaded).pipe(
-      tap(loaded => {
+    return this.store.selectOnce(PizzaState.allPizzasLoaded).pipe(
+      switchMap((loaded: boolean) => {
         if (!loaded) {
-          this.store.dispatch(new fromStore.LoadPizzas());
+          return this.store.dispatch(new LoadPizzas());
         }
+        return of(true);
       }),
-      filter(loaded => loaded),
       take(1)
     );
   }

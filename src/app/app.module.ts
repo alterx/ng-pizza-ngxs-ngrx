@@ -3,28 +3,19 @@ import { BrowserModule } from "@angular/platform-browser";
 import { Routes, RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
+import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
+import { NgxsModule } from "@ngxs/store";
 import {
-  StoreRouterConnectingModule,
+  NgxsRouterPluginModule,
   RouterStateSerializer
-} from "@ngrx/router-store";
-import { StoreModule, MetaReducer } from "@ngrx/store";
-import { EffectsModule } from "@ngrx/effects";
-
-import { reducers, effects, CustomSerializer } from "./store";
-
-// not used in production
-import { StoreDevtoolsModule } from "@ngrx/store-devtools";
-import { storeFreeze } from "ngrx-store-freeze";
+} from "@ngxs/router-plugin";
+import { CustomSerializer } from "./store/router.serializer";
 
 // this would be done dynamically with webpack for builds
 const environment = {
   development: true,
   production: false
 };
-
-export const metaReducers: MetaReducer<any>[] = !environment.production
-  ? [storeFreeze]
-  : [];
 
 // bootstrap
 import { AppComponent } from "./containers/app/app.component";
@@ -43,11 +34,11 @@ export const ROUTES: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(ROUTES),
-    StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot(effects),
-    StoreRouterConnectingModule,
-
-    environment.development ? StoreDevtoolsModule.instrument() : []
+    NgxsModule.forRoot([]),
+    NgxsRouterPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      disabled: environment.production
+    })
   ],
   providers: [{ provide: RouterStateSerializer, useClass: CustomSerializer }],
   declarations: [AppComponent],

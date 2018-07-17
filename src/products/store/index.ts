@@ -1,4 +1,7 @@
-export * from "./reducers";
 export * from "./actions";
-export * from "./effects";
-export * from "./selectors";
+
+import { PizzaState } from "./state/pizza.state";
+import { ToppingsState } from "./state/toppings.state";
+import { ProductsState } from "./state/products.state";
+
+export * from "./state";
