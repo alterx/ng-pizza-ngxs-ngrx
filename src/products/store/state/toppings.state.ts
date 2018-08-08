@@ -1,15 +1,15 @@
-import { Action, State, StateContext, Selector } from "@ngxs/store";
-import { of } from "rxjs";
-import { catchError, map, tap } from "rxjs/operators";
-import { Topping } from "../../models/topping.model";
-import { ToppingsService } from "../../services";
-import { LoadPizzas } from "../actions/pizzas.action";
+import { Action, State, StateContext, Selector } from '@ngxs/store';
+import { of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Topping } from '../../models/topping.model';
+import { ToppingsService } from '../../services';
+import { LoadPizzas } from '../actions/pizzas.action';
 import {
   LoadToppings,
   LoadToppingsFail,
   LoadToppingsSuccess,
-  VisualizeToppings
-} from "../actions/toppings.action";
+  VisualizeToppings,
+} from '../actions/toppings.action';
 
 export class ToppingsStateModel {
   entities: { [id: number]: Topping };
@@ -19,13 +19,13 @@ export class ToppingsStateModel {
 }
 
 @State<ToppingsStateModel>({
-  name: "toppings",
+  name: 'toppings',
   defaults: {
     entities: {},
     loaded: false,
     loading: false,
-    selectedToppings: []
-  }
+    selectedToppings: [],
+  },
 })
 export class ToppingsState {
   constructor(private toppingsService: ToppingsService) {}
@@ -37,7 +37,7 @@ export class ToppingsState {
 
   @Selector()
   static getAllToppings(state: ToppingsStateModel) {
-    console.log("toppings");
+    console.log('toppings');
     console.log(state);
     const result = Object.keys(state.entities).map(id => state.entities[+id]);
     console.log(result);
@@ -52,10 +52,10 @@ export class ToppingsState {
   @Action(LoadToppings)
   loadToppings(
     { patchState, dispatch }: StateContext<ToppingsStateModel>,
-    loadPizzas: LoadPizzas
+    loadPizzas: LoadPizzas,
   ) {
     patchState({
-      loading: true
+      loading: true,
     });
 
     return this.toppingsService
@@ -63,15 +63,15 @@ export class ToppingsState {
       .pipe(
         map(
           toppings => dispatch(new LoadToppingsSuccess(toppings)),
-          catchError(err => dispatch(of(new LoadToppingsFail(err))))
-        )
+          catchError(err => dispatch(of(new LoadToppingsFail(err)))),
+        ),
       );
   }
 
   @Action(LoadToppingsSuccess)
   loadToppingsSuccess(
     { patchState, getState }: StateContext<ToppingsStateModel>,
-    { payload }: LoadToppingsSuccess
+    { payload }: LoadToppingsSuccess,
   ) {
     const toppings = payload;
 
@@ -79,40 +79,40 @@ export class ToppingsState {
       (entities: { [id: number]: Topping }, topping: Topping) => {
         return {
           ...entities,
-          [topping.id]: topping
+          [topping.id]: topping,
         };
       },
       {
-        ...getState().entities
-      }
+        ...getState().entities,
+      },
     );
 
     patchState({
       loaded: true,
       loading: false,
-      entities
+      entities,
     });
   }
 
   @Action(LoadToppingsFail)
   loadToppingsFail(
     { patchState }: StateContext<ToppingsStateModel>,
-    { payload }: LoadToppingsFail
+    { payload }: LoadToppingsFail,
   ) {
     patchState({
       loaded: false,
-      loading: false
+      loading: false,
     });
   }
 
   @Action(VisualizeToppings)
   visualizeToppings(
     { patchState }: StateContext<ToppingsStateModel>,
-    { payload }: VisualizeToppings
+    { payload }: VisualizeToppings,
   ) {
     console.log(payload);
     patchState({
-      selectedToppings: payload
+      selectedToppings: payload,
     });
   }
 }

@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
-  RouterStateSnapshot
-} from "@angular/router";
-import { Store } from "@ngxs/store";
-import { Observable } from "rxjs";
-import { of } from "rxjs";
-import { catchError, filter, switchMap, tap, take } from "rxjs/operators";
-import { LoadToppings } from "../store/actions/toppings.action";
-import { ToppingsState } from "../store/state/toppings.state";
+  RouterStateSnapshot,
+} from '@angular/router';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, filter, switchMap, tap, take } from 'rxjs/operators';
+import { LoadToppings } from '../store/actions/toppings.action';
+import { ToppingsState } from '../store/state/toppings.state';
 
 @Injectable()
 export class ToppingsGuard implements CanActivate {
@@ -17,11 +17,11 @@ export class ToppingsGuard implements CanActivate {
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ): boolean | Observable<boolean> | Promise<boolean> {
     return this.checkStore().pipe(
       switchMap(() => of(true)),
-      catchError(err => of(false))
+      catchError(err => of(false)),
     );
   }
 
@@ -33,7 +33,7 @@ export class ToppingsGuard implements CanActivate {
         }
       }),
       filter(loaded => loaded),
-      take(1)
+      take(1),
     );
   }
 }

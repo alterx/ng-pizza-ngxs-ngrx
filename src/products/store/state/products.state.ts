@@ -1,6 +1,6 @@
-import { State, Selector, Action, StateContext } from "@ngxs/store";
-import { PizzaState, PizzaStateModel } from "./pizza.state";
-import { ToppingsStateModel, ToppingsState } from "./toppings.state";
+import { State, Selector, Action, StateContext } from '@ngxs/store';
+import { PizzaState, PizzaStateModel } from './pizza.state';
+import { ToppingsStateModel, ToppingsState } from './toppings.state';
 
 interface ProductsStateModel {
   pizzas: PizzaStateModel;
@@ -8,8 +8,8 @@ interface ProductsStateModel {
 }
 
 @State<ProductsStateModel>({
-  name: "products",
-  children: [PizzaState, ToppingsState]
+  name: 'products',
+  children: [PizzaState, ToppingsState],
 })
 export class ProductsState {
   @Selector()
@@ -31,7 +31,7 @@ export class ProductsState {
 
     const result = {
       ...selectedPizza,
-      toppings
+      toppings,
     };
 
     return result;

@@ -1,9 +1,9 @@
-import { Pizza } from "../../models/pizza.model";
+import { Pizza } from '../../models/pizza.model';
 
 // load pizzas
-export const LOAD_PIZZAS = "[Products] Load Pizzas";
-export const LOAD_PIZZAS_FAIL = "[Products] Load Pizzas Fail";
-export const LOAD_PIZZAS_SUCCESS = "[Products] Load Pizzas Success";
+export const LOAD_PIZZAS = '[Products] Load Pizzas';
+export const LOAD_PIZZAS_FAIL = '[Products] Load Pizzas Fail';
+export const LOAD_PIZZAS_SUCCESS = '[Products] Load Pizzas Success';
 
 export class LoadPizzas {
   static readonly type = LOAD_PIZZAS;
@@ -23,9 +23,9 @@ export class LoadPizzasSuccess {
 }
 
 // create pizzas
-export const CREATE_PIZZA = "[Products] Create Pizza";
-export const CREATE_PIZZA_FAIL = "[Products] Create Pizza Fail";
-export const CREATE_PIZZA_SUCCESS = "[Products] Create Pizza Success";
+export const CREATE_PIZZA = '[Products] Create Pizza';
+export const CREATE_PIZZA_FAIL = '[Products] Create Pizza Fail';
+export const CREATE_PIZZA_SUCCESS = '[Products] Create Pizza Success';
 
 export class CreatePizza {
   static readonly type = CREATE_PIZZA;
@@ -46,9 +46,9 @@ export class CreatePizzaSuccess {
 }
 
 // update pizzas
-export const UPDATE_PIZZA = "[Products] Update Pizza";
-export const UPDATE_PIZZA_FAIL = "[Products] Update Pizza Fail";
-export const UPDATE_PIZZA_SUCCESS = "[Products] Update Pizza Success";
+export const UPDATE_PIZZA = '[Products] Update Pizza';
+export const UPDATE_PIZZA_FAIL = '[Products] Update Pizza Fail';
+export const UPDATE_PIZZA_SUCCESS = '[Products] Update Pizza Success';
 
 export class UpdatePizza {
   static readonly type = UPDATE_PIZZA;
@@ -69,9 +69,9 @@ export class UpdatePizzaSuccess {
 }
 
 // remove pizzas
-export const REMOVE_PIZZA = "[Products] Remove Pizza";
-export const REMOVE_PIZZA_FAIL = "[Products] Remove Pizza Fail";
-export const REMOVE_PIZZA_SUCCESS = "[Products] Remove Pizza Success";
+export const REMOVE_PIZZA = '[Products] Remove Pizza';
+export const REMOVE_PIZZA_FAIL = '[Products] Remove Pizza Fail';
+export const REMOVE_PIZZA_SUCCESS = '[Products] Remove Pizza Success';
 
 export class RemovePizza {
   static readonly type = REMOVE_PIZZA;
@@ -93,7 +93,7 @@ export class RemovePizzaSuccess {
 
 // selected Pizza action
 export class SelectPizza {
-  static readonly type = "[Pizzas] Select Pizza";
+  static readonly type = '[Pizzas] Select Pizza';
 
   constructor(public readonly payload: number) {}
 }

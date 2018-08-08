@@ -1,22 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { Select, Store } from "@ngxs/store";
-import { Observable } from "rxjs";
-import { tap, withLatestFrom, take, map } from "rxjs/operators";
-import { Pizza } from "../../models/pizza.model";
-import { Topping } from "../../models/topping.model";
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { tap, withLatestFrom, take, map } from 'rxjs/operators';
+import { Pizza } from '../../models/pizza.model';
+import { Topping } from '../../models/topping.model';
 import {
   SelectPizza,
   CreatePizza,
   UpdatePizza,
-  RemovePizza
-} from "../../store/actions/pizzas.action";
-import { ProductsState, PizzaState, ToppingsState } from "../../store";
-import { VisualizeToppings } from "../../store/actions/toppings.action";
+  RemovePizza,
+} from '../../store/actions/pizzas.action';
+import { ProductsState, PizzaState, ToppingsState } from '../../store';
+import { VisualizeToppings } from '../../store/actions/toppings.action';
 
 @Component({
-  selector: "product-item",
-  styleUrls: ["product-item.component.scss"],
+  selector: 'product-item',
+  styleUrls: ['product-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
@@ -33,7 +33,7 @@ import { VisualizeToppings } from "../../store/actions/toppings.action";
         </pizza-display>
       </pizza-form>
     </div>
-  `
+  `,
 })
 export class ProductItemComponent implements OnInit {
   @Select(PizzaState.getSelectedPizza) pizza$: Observable<Pizza>;
@@ -53,7 +53,7 @@ export class ProductItemComponent implements OnInit {
             ? pizza.toppings.map(topping => topping.id)
             : [];
           this.store.dispatch(new VisualizeToppings(toppings));
-        })
+        }),
       )
       .subscribe();
     // Using store.select seems to fix the issue, but this code is duplicated from ToppingsState.getAllToppings
@@ -62,7 +62,7 @@ export class ProductItemComponent implements OnInit {
       .pipe(
         map(entities => {
           return Object.keys(entities).map(id => entities[+id]);
-        })
+        }),
       );
   }
 

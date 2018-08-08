@@ -1,4 +1,4 @@
-import { State, StateContext, Action, Selector } from "@ngxs/store";
+import { State, StateContext, Action, Selector } from '@ngxs/store';
 import {
   LoadPizzas,
   LoadPizzasSuccess,
@@ -8,14 +8,14 @@ import {
   CreatePizzaSuccess,
   CreatePizzaFail,
   RemovePizza,
-  UpdatePizza
-} from "../actions/pizzas.action";
-import { PizzasService } from "../../services";
-import { map, catchError, tap } from "rxjs/operators";
-import { of } from "rxjs";
-import { Pizza } from "../../models/pizza.model";
-import { ToppingsState } from "./toppings.state";
-import { Navigate } from "@ngxs/router-plugin";
+  UpdatePizza,
+} from '../actions/pizzas.action';
+import { PizzasService } from '../../services';
+import { map, catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { Pizza } from '../../models/pizza.model';
+import { ToppingsState } from './toppings.state';
+import { Navigate } from '@ngxs/router-plugin';
 
 export class PizzaStateModel {
   entities: { [id: number]: Pizza };
@@ -25,13 +25,13 @@ export class PizzaStateModel {
 }
 
 @State<PizzaStateModel>({
-  name: "pizzas",
+  name: 'pizzas',
   defaults: {
     entities: {},
     loaded: false,
     loading: false,
-    selectedPizza: {}
-  }
+    selectedPizza: {},
+  },
 })
 export class PizzaState {
   constructor(private pizzaService: PizzasService) {}
@@ -54,22 +54,24 @@ export class PizzaState {
   @Action(LoadPizzas)
   loadPizzas(
     { dispatch, patchState }: StateContext<PizzaStateModel>,
-    loadPizzas: LoadPizzas
+    loadPizzas: LoadPizzas,
   ) {
     patchState({
-      loading: true
+      loading: true,
     });
 
-    return this.pizzaService.getPizzas().pipe(
-      map(pizzas => dispatch(new LoadPizzasSuccess(pizzas))),
-      catchError(error => dispatch(of(new LoadPizzasFail(error))))
-    );
+    return this.pizzaService
+      .getPizzas()
+      .pipe(
+        map(pizzas => dispatch(new LoadPizzasSuccess(pizzas))),
+        catchError(error => dispatch(of(new LoadPizzasFail(error)))),
+      );
   }
 
   @Action(LoadPizzasSuccess)
   loadPizzasSuccess(
     { getState, patchState }: StateContext<PizzaStateModel>,
-    { payload }: LoadPizzasSuccess
+    { payload }: LoadPizzasSuccess,
   ) {
     const pizzas = payload;
 
@@ -77,98 +79,100 @@ export class PizzaState {
       (entities: { [id: number]: Pizza }, pizza) => {
         return {
           ...entities,
-          [pizza.id]: pizza
+          [pizza.id]: pizza,
         };
       },
       {
-        ...getState().entities
-      }
+        ...getState().entities,
+      },
     );
 
     patchState({
       loaded: true,
       loading: false,
-      entities
+      entities,
     });
   }
 
   @Action(LoadPizzasFail)
   loadPizzasFail(
     { patchState }: StateContext<PizzaStateModel>,
-    { payload }: LoadPizzasFail
+    { payload }: LoadPizzasFail,
   ) {
     patchState({
       loaded: false,
-      loading: false
+      loading: false,
     });
   }
 
   @Action(SelectPizza)
   selectPizza(
     { getState, patchState }: StateContext<PizzaStateModel>,
-    { payload }: SelectPizza
+    { payload }: SelectPizza,
   ) {
     const selectedPizza = getState().entities[payload];
 
     patchState({
-      selectedPizza
+      selectedPizza,
     });
   }
 
   @Action(CreatePizza)
   createPizza(
     { dispatch }: StateContext<PizzaStateModel>,
-    { payload }: CreatePizza
+    { payload }: CreatePizza,
   ) {
-    return this.pizzaService.createPizza(payload).pipe(
-      map(pizza => dispatch(new CreatePizzaSuccess(pizza))),
-      catchError(err => dispatch(new CreatePizzaFail(err)))
-    );
+    return this.pizzaService
+      .createPizza(payload)
+      .pipe(
+        map(pizza => dispatch(new CreatePizzaSuccess(pizza))),
+        catchError(err => dispatch(new CreatePizzaFail(err))),
+      );
   }
 
   @Action(CreatePizzaSuccess)
   createPizzaSuccess(
     { getState, patchState, dispatch }: StateContext<PizzaStateModel>,
-    { payload }: CreatePizzaSuccess
+    { payload }: CreatePizzaSuccess,
   ) {
     const entities = {
       ...getState().entities,
-      [payload.id]: payload
+      [payload.id]: payload,
     };
 
     patchState({
-      entities
+      entities,
     });
 
-    dispatch(new Navigate(["/products"]));
+    dispatch(new Navigate(['/products']));
   }
 
   @Action(UpdatePizza)
   updatePizza(
     { getState, patchState, dispatch }: StateContext<PizzaStateModel>,
-    { payload }: UpdatePizza
+    { payload }: UpdatePizza,
   ) {
     return this.pizzaService.updatePizza(payload).pipe(
       tap(pizza => {
         const entities = {
           ...getState().entities,
-          [payload.id]: payload
+          [payload.id]: payload,
         };
 
         patchState({
-          entities
+          entities,
         });
       }),
       tap(() => {
-        dispatch(new Navigate(["/products"]));
-      })
+        dispatch(new Navigate(['/products']));
+      }),
     );
   }
 
   @Action(RemovePizza)
   deletePizza(
     { getState, patchState, dispatch }: StateContext<PizzaStateModel>,
-    { payload }: RemovePizza
+    { payload }: RemovePizza,
   ) {
     const pizza = payload;
 
@@ -177,12 +181,12 @@ export class PizzaState {
         const { [pizza.id]: removed, ...result } = getState().entities;
 
         patchState({
-          entities: result
+          entities: result,
         });
       }),
       tap(() => {
-        dispatch(new Navigate(["/products"]));
-      })
+        dispatch(new Navigate(['/products']));
+      }),
     );
   }
 }

@@ -1,5 +1,5 @@
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { RouterStateSerializer } from "@ngxs/router-plugin";
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSerializer } from '@ngxs/router-plugin';
 
 export class RouterStateModel {
   params: any;
