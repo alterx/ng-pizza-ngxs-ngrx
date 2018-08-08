@@ -36,10 +36,11 @@ import { VisualizeToppings } from '../../store/actions/toppings.action';
   `,
 })
 export class ProductItemComponent implements OnInit {
-  @Select(PizzaState.getSelectedPizza) pizza$: Observable<Pizza>;
-  @Select(ProductsState.getPizzaVisualized) visualise$: Observable<Pizza>;
-  // For some reason using this causes multiple subscriptions that just keep growing
-  // @Select(ToppingsState.getAllToppings) toppings$: Observable<Topping[]>;
+  @Select(PizzaState.getSelectedPizza)
+  pizza$: Observable<Pizza>;
+  @Select(ProductsState.getPizzaVisualized)
+  visualise$: Observable<Pizza>;
+  @Select(ToppingsState.getAllToppings)
   toppings$: Observable<Topping[]>;
 
   constructor(private store: Store) {}
@@ -56,17 +57,10 @@ export class ProductItemComponent implements OnInit {
         }),
       )
       .subscribe();
-    // Using store.select seems to fix the issue, but this code is duplicated from ToppingsState.getAllToppings
-    this.toppings$ = this.store
-      .select(state => state.products.toppings.entities)
-      .pipe(
-        map(entities => {
-          return Object.keys(entities).map(id => entities[+id]);
-        }),
-      );
   }
 
   onSelect(event: number[]) {
+    console.log('Event:', event);
     this.store.dispatch(new VisualizeToppings(event));
   }
 

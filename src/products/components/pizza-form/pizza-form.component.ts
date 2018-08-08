@@ -90,13 +90,19 @@ import { Topping } from '../../models/topping.model';
 export class PizzaFormComponent implements OnChanges {
   exists = false;
 
-  @Input() pizza: Pizza;
-  @Input() toppings: Topping[];
+  @Input()
+  pizza: Pizza;
+  @Input()
+  toppings: Topping[];
 
-  @Output() selected = new EventEmitter<number[]>();
-  @Output() create = new EventEmitter<Pizza>();
-  @Output() update = new EventEmitter<Pizza>();
-  @Output() remove = new EventEmitter<Pizza>();
+  @Output()
+  selected = new EventEmitter<number[]>();
+  @Output()
+  create = new EventEmitter<Pizza>();
+  @Output()
+  update = new EventEmitter<Pizza>();
+  @Output()
+  remove = new EventEmitter<Pizza>();
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -112,18 +118,24 @@ export class PizzaFormComponent implements OnChanges {
   get nameControlInvalid() {
     return this.nameControl.hasError('required') && this.nameControl.touched;
   }
-
   ngOnChanges(changes: SimpleChanges) {
-    if (this.pizza && this.pizza.id) {
+    if (
+      changes.pizza &&
+      changes.pizza.currentValue &&
+      (<Pizza>changes.pizza.currentValue).id
+    ) {
       this.exists = true;
-      this.form.patchValue(this.pizza);
+      this.form.patchValue(changes.pizza.currentValue);
+
+      this.form
+        .get('toppings')
+        .valueChanges.pipe(
+          map(toppings => toppings.map((topping: Topping) => topping.id)),
+        )
+        .subscribe(value => {
+          return this.selected.emit(value);
+        });
     }
-    this.form
-      .get('toppings')
-      .valueChanges.pipe(
-        map(toppings => toppings.map((topping: Topping) => topping.id)),
-      )
-      .subscribe(value => this.selected.emit(value));
   }
 
   createPizza(form: FormGroup) {

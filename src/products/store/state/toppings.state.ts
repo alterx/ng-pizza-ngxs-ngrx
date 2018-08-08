@@ -37,10 +37,7 @@ export class ToppingsState {
 
   @Selector()
   static getAllToppings(state: ToppingsStateModel) {
-    console.log('toppings');
-    console.log(state);
     const result = Object.keys(state.entities).map(id => state.entities[+id]);
-    console.log(result);
     return result;
   }
 
@@ -110,7 +107,6 @@ export class ToppingsState {
     { patchState }: StateContext<ToppingsStateModel>,
     { payload }: VisualizeToppings,
   ) {
-    console.log(payload);
     patchState({
       selectedToppings: payload,
     });
